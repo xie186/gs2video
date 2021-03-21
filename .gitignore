@@ -5,3 +5,5 @@ env4slides2vedio/
 virenv4*/
 token.json
 credentials.json
+
+.fuse_hidden*
