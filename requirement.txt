@@ -1,0 +1,6 @@
+certifi==2020.12.5
+lxml @ file:///home/conda/feedstock_root/build_artifacts/lxml_1610146439516/work
+olefile @ file:///home/conda/feedstock_root/build_artifacts/olefile_1602866521163/work
+Pillow @ file:///home/conda/feedstock_root/build_artifacts/pillow_1615243969088/work
+python-pptx==0.6.18
+XlsxWriter @ file:///home/conda/feedstock_root/build_artifacts/xlsxwriter_1602583799765/work
