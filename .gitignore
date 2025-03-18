@@ -7,3 +7,5 @@ token.json
 credentials.json
 
 .fuse_hidden*
+*.onnx
+voices.bin
