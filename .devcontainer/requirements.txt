@@ -1,0 +1,8 @@
+google-api-python-client>=2.164.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib==1.2.1
+gTTS==2.5.4
+moviepy==2.1.2
+kokoro-onnx==0.4.5
+soundfile==0.13.1
+misaki[en]==0.8.4
