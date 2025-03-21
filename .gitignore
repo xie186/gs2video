@@ -9,3 +9,6 @@ credentials.json
 .fuse_hidden*
 *.onnx
 voices.bin
+
+cache/** 
+*.mp4
