@@ -14,6 +14,9 @@ def main():
                         help="Keep intermediate files (mp3 and png files)")
     parser.add_argument('--force', action='store_true', 
                         help='Force generate the output video even if it already exists')
+    parser.add_argument('--duration', type=int, 
+                        help='Duration of each slide in seconds', 
+                        default=0.5, required=False)
     parser.add_argument('-o', '--output',
                         help='output file', default="Output_file.mp4")
     

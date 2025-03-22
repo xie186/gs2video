@@ -20,7 +20,8 @@ g2p = en.G2P(trf=False, british=False, fallback=fallback)
 kokoro = Kokoro("kokoro-v1.0.onnx", "voices-v1.0.bin")
 
 class GS2Video:
-    def __init__(self, credentials, output, language='en', fps=24, keep=False, force=False):
+    def __init__(self, credentials, output, language='en', fps=24, 
+                 keep=False, force=False, duration=1):
         self.credentials = credentials
         self.output = os.path.abspath(output)
         self.language = language
@@ -30,6 +31,7 @@ class GS2Video:
         self.tem_files = []
         self.clip_list = []
         self.media = 'media'
+        self.duration = duration
         self.service = build('slides', 'v1', 
                              credentials=self.credentials, 
                              cache_discovery=False)
@@ -77,7 +79,9 @@ Please remove it or use --force option to overwrite it.
         video_hash = video_hash.hexdigest()
         video_file = os.path.join(self.cache_dir, f"{video_hash}.mp4")
         if not os.path.isfile(video_file) or self.force:
-            concat_clip = concatenate_videoclips(self.clip_list, method="compose")
+            concat_clip = concatenate_videoclips(self.clip_list, 
+                                                 method="compose",
+                                                 padding=self.duration)
             logging.info("Write video file: ") 
             concat_clip.write_videofile(video_file, fps=self.fps)
             
