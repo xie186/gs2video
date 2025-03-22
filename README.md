@@ -10,6 +10,11 @@ GS2Video is a Python tool that converts Google Slides presentations into videos.
 - Keep or remove intermediate files (mp3 and png files)
 - Force overwrite existing output video files
 
+## Support Me
+Like what I do, Please consider supporting me.
+
+<a href="https://coindrop.to/xie186" target="_blank"><img src="https://coindrop.to/embed-button.png" style="border-radius: 10px;" alt="Coindrop.to me" style="height: 57px !important;width: 229px !important;" ></a>
+
 ## Installation
 
 1. Clone the repository:
