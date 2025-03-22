@@ -29,11 +29,27 @@ class GS2Video:
         self.force = force
         self.tem_files = []
         self.clip_list = []
-        self.service = build('slides', 'v1', credentials=self.credentials)
-        # Ensure the cache directory exists
-        if not os.path.exists('cache'):
-            os.makedirs('cache')
+        self.media = 'media'
+        self.service = build('slides', 'v1', 
+                             credentials=self.credentials, 
+                             cache_discovery=False)
+        self.cache_dir = self.prep_cache_dir()
+        self.check_output()
+        
+    def check_output(self):
+        if os.path.isfile(self.output) and not self.force:
+            sys.exit(f"""
+Output video file already exists: {self.output}
+Please remove it or use --force option to overwrite it.
+                     """)
             
+    def prep_cache_dir(self):
+        prefix = os.path.splitext(os.path.basename(self.output))[0]
+        cache_dir = os.path.join(self.media, prefix)
+        if not os.path.exists(cache_dir):
+            os.makedirs(cache_dir)
+        return cache_dir
+        
     def generate_hash(self, content):
         if isinstance(content, str):
             content = content.encode('utf-8')
@@ -53,47 +69,13 @@ class GS2Video:
         presentation = self.service.presentations().get(presentationId=presentation_id).execute()
         slides = presentation.get('slides')
         print('The presentation contains {} slides:'.format(len(slides)))
+        
         video_hash = hashlib.md5()
         for i, slide in enumerate(slides):
-            logging.info('- Slide #{} contains {} elements.'.format(i + 1, len(slide.get('pageElements')))) 
-            text = slide['slideProperties']['notesPage']['pageElements'][1]['shape']['text']['textElements'][1]['textRun']['content']
-            text_hash = self.generate_hash(text)
-            video_hash.update(text_hash.encode('utf-8'))
-            tem_audio = f"cache/{text_hash}.mp3"
-            
-            if not os.path.isfile(tem_audio):
-                v = gTTS(text=text, lang=self.language, slow=False) 
-                v.save(tem_audio) 
-            tem_audiocontent = AudioFileClip(tem_audio)
-            print(tem_audiocontent)
-            self.tem_files.append(tem_audio)
-            
-            img_info = self.service.presentations().pages().getThumbnail(
-                presentationId=presentation_id,
-                pageObjectId=slide.get('objectId'), 
-                thumbnailProperties_thumbnailSize="LARGE"
-                ).execute()
-            img_url = img_info["contentUrl"]
-            
-            with urllib.request.urlopen(img_url) as response:
-                img_content = response.read()
-            img_hash = self.generate_hash(img_content)
-            video_hash.update(img_hash.encode('utf-8'))
-            tem_png = f"cache/{img_hash}.png"
-            if i == 0:
-                print(img_hash)
-            
-            if not os.path.isfile(tem_png):
-                with open(tem_png, 'wb') as f:
-                    f.write(img_content)
-            self.tem_files.append(tem_png)
-            
-            print(tem_audiocontent.duration)
-            clip = ImageClip(tem_png).with_duration(tem_audiocontent.duration).with_audio(tem_audiocontent)
-            self.clip_list.append(clip)
+            self.process_slide(slide, video_hash, i, presentation_id)
         
         video_hash = video_hash.hexdigest()
-        video_file = os.path.join('cache', f"{video_hash}.mp4")
+        video_file = os.path.join(self.cache_dir, f"{video_hash}.mp4")
         if not os.path.isfile(video_file) or self.force:
             concat_clip = concatenate_videoclips(self.clip_list, method="compose")
             logging.info("Write video file: ") 
