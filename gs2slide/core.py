@@ -83,7 +83,7 @@ Please remove it or use --force option to overwrite it.
             concat_clip = concatenate_videoclips(self.clip_list, 
                                                  method="compose",
                                                  padding=self.duration,
-                                                 bg_color='white')
+                                                 bg_color=self.bg_color)
             logging.info("Write video file: ") 
             concat_clip.write_videofile(video_file, fps=self.fps)
             
