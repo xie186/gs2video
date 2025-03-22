@@ -24,15 +24,21 @@ def main():
     parser.add_argument('--duration', type=int, 
                         help='Duration of each slide in seconds', 
                         default=0.5, required=False)
-    parser.add_argument('--bg_color', type=str, 
-                        help='Background color during transitions', 
-                        required=False, default='black')
+    parser.add_argument('--bg_color', type=parse_rgb, 
+                        help='Background color during transitions (RGB values as comma-separated integers)', 
+                        required=False, default=(0, 0, 0))
     parser.add_argument('-o', '--output',
                         help='output file', default="Output_file.mp4")
     
     options = parser.parse_args()
     creds = credential()
-    gs2video = GS2Video(credentials=creds, output=options.output, language=options.language, fps=options.fps, keep=options.keep, force=options.force, bg_color=options.bg_color)
+    gs2video = GS2Video(credentials=creds, 
+                        output=options.output, 
+                        language=options.language, 
+                        fps=options.fps, 
+                        keep=options.keep, 
+                        force=options.force, 
+                        bg_color=options.bg_color)
     gs2video.to_video(options.presentation_id)
 
 if __name__ == '__main__':
