@@ -44,7 +44,7 @@ The CLI allows you to convert Google Slides presentations to videos with various
 #### Example Command
 
 ```bash
-python -m gs2slide.cli -p <presentation_id> -o output.mp4 --fps 24 --language en --keep --force --duration 1 --bg_color 0,0,0
+python -m gs2video.cli -p <presentation_id> -o output.mp4 --fps 24 --language en --keep --force --duration 1 --bg_color 0,0,0
 ```
 
 #### Arguments
@@ -61,7 +61,7 @@ python -m gs2slide.cli -p <presentation_id> -o output.mp4 --fps 24 --language en
 ### Example
 
 ```bash
-python -m gs2slide.cli -p 1A2B3C4D5E6F7G8H9I0J -o my_presentation.mp4 --fps 30 --language en --keep --force --duration 2 --bg_color 255,255,255
+python -m gs2video.cli -p 1A2B3C4D5E6F7G8H9I0J -o my_presentation.mp4 --fps 30 --language en --keep --force --duration 2 --bg_color 255,255,255
 ```
 
 ## Design
@@ -70,7 +70,7 @@ python -m gs2slide.cli -p 1A2B3C4D5E6F7G8H9I0J -o my_presentation.mp4 --fps 30 -
 
 ```
 gs2video/
-├── gs2slide/
+├── gs2video/
 │   ├── __init__.py
 │   ├── cli.py
 │   ├── core.py
@@ -82,9 +82,9 @@ gs2video/
 
 ### Core Components
 
-- **`gs2slide/core.py`**: Contains the `GS2Video` class that handles the conversion of Google Slides presentations to videos.
-- **`gs2slide/cli.py`**: Provides the command line interface for the tool.
-- **`gs2slide/utils.py`**: Contains utility functions, including the `credential` function for Google API authentication.
+- **`gs2video/core.py`**: Contains the `GS2Video` class that handles the conversion of Google Slides presentations to videos.
+- **`gs2video/cli.py`**: Provides the command line interface for the tool.
+- **`gs2video/utils.py`**: Contains utility functions, including the `credential` function for Google API authentication.
 
 ### GS2Video Class
 
