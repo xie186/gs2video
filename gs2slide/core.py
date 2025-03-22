@@ -6,9 +6,18 @@ import urllib.request
 from googleapiclient.discovery import build
 from gtts import gTTS
 from moviepy import *
+import soundfile as sf
+from kokoro_onnx import Kokoro
+from misaki import en, espeak
 import logging
 
 logging.basicConfig(level=logging.INFO)
+
+# Misaki G2P with espeak-ng fallback
+fallback = espeak.EspeakFallback(british=False)
+g2p = en.G2P(trf=False, british=False, fallback=fallback)
+# Kokoro
+kokoro = Kokoro("kokoro-v1.0.onnx", "voices-v1.0.bin")
 
 class GS2Video:
     def __init__(self, credentials, output, language='en', fps=24, keep=False, force=False):
@@ -96,3 +105,62 @@ class GS2Video:
             
         if not self.keep:
             self.rmtem()
+
+    def process_slide(self, slide, video_hash, index, presentation_id):
+        logging.info('- Slide #{} contains {} elements.'.format(index + 1, len(slide.get('pageElements')))) 
+        text = slide['slideProperties']['notesPage']['pageElements'][1]['shape']['text']['textElements'][1]['textRun']['content']
+        #for element in slide['slideProperties']['notesPage']['pageElements'][1]['shape']['text']['textElements']:
+        #    print(element.keys())
+        #    print(f'Element {element}:{element[1]['textRun']['content']}')
+        text_hash = self.generate_hash(text)
+        video_hash.update(text_hash.encode('utf-8'))
+        
+        tem_audio = self.process_audio_kokoro(text, text_hash, index)
+        tem_png = self.process_image(slide, video_hash, index, presentation_id)
+        
+        tem_audiocontent = AudioFileClip(tem_audio)
+        print(tem_audiocontent.duration)
+        clip = ImageClip(tem_png).with_duration(tem_audiocontent.duration).with_audio(tem_audiocontent)
+        self.clip_list.append(clip)
+
+    def process_audio(self, text, text_hash, index):
+        tem_audio = os.path.join(self.cache_dir, f"slide-{index}_{text_hash}.mp3")
+        if not os.path.isfile(tem_audio):
+            v = gTTS(text=text, lang=self.language, slow=False) 
+            v.save(tem_audio) 
+        tem_audiocontent = AudioFileClip(tem_audio)
+        #print(tem_audiocontent)
+        self.tem_files.append(tem_audio)
+        return tem_audio
+
+    def process_image(self, slide, video_hash, index, presentation_id):
+        img_info = self.service.presentations().pages().getThumbnail(
+            presentationId=presentation_id,
+            pageObjectId=slide.get('objectId'), 
+            thumbnailProperties_thumbnailSize="LARGE"
+            ).execute()
+        img_url = img_info["contentUrl"]
+        
+        with urllib.request.urlopen(img_url) as response:
+            img_content = response.read()
+        img_hash = self.generate_hash(img_content)
+        video_hash.update(img_hash.encode('utf-8'))
+        tem_png = os.path.join(self.cache_dir, f"slide-{index}_{img_hash}.png")
+        
+        if not os.path.isfile(tem_png):
+            with open(tem_png, 'wb') as f:
+                f.write(img_content)
+        self.tem_files.append(tem_png)
+        return tem_png
+    
+    def process_audio_kokoro(self, text, text_hash, index):
+        print(f'Slide-{index} text: {text}')
+        tem_audio = os.path.join(self.cache_dir, f"slide-{index}_{text_hash}.wav")
+        if not os.path.isfile(tem_audio):
+            phonemes, _ = g2p(text)
+            samples, sample_rate = kokoro.create(phonemes, 'af_heart', is_phonemes=True)
+            sf.write(tem_audio, samples, sample_rate)
+        tem_audiocontent = AudioFileClip(tem_audio)
+        print(tem_audiocontent)
+        self.tem_files.append(tem_audio)
+        return tem_audio
