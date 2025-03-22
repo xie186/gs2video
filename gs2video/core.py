@@ -94,12 +94,18 @@ Please remove it or use --force option to overwrite it.
         if not self.keep:
             self.rmtem()
 
+    def extract_text_from_slide(self, slide):
+        text_elements = []
+        for element in slide['slideProperties']['notesPage']['pageElements']:
+            if 'shape' in element and 'text' in element['shape']:
+                for text_element in element['shape']['text']['textElements']:
+                    if 'textRun' in text_element:
+                        text_elements.append(text_element['textRun']['content'])
+        return ' '.join(text_elements)
+
     def process_slide(self, slide, video_hash, index, presentation_id):
         logging.info('- Slide #{} contains {} elements.'.format(index + 1, len(slide.get('pageElements')))) 
-        text = slide['slideProperties']['notesPage']['pageElements'][1]['shape']['text']['textElements'][1]['textRun']['content']
-        #for element in slide['slideProperties']['notesPage']['pageElements'][1]['shape']['text']['textElements']:
-        #    print(element.keys())
-        #    print(f'Element {element}:{element[1]['textRun']['content']}')
+        text = self.extract_text_from_slide(slide)
         text_hash = self.generate_hash(text)
         video_hash.update(text_hash.encode('utf-8'))
         
