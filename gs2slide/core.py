@@ -21,7 +21,7 @@ kokoro = Kokoro("kokoro-v1.0.onnx", "voices-v1.0.bin")
 
 class GS2Video:
     def __init__(self, credentials, output, language='en', fps=24, 
-                 keep=False, force=False, duration=1):
+                 keep=False, force=False, duration=1, bg_color=(0, 0, 0)):
         self.credentials = credentials
         self.output = os.path.abspath(output)
         self.language = language
@@ -32,6 +32,7 @@ class GS2Video:
         self.clip_list = []
         self.media = 'media'
         self.duration = duration
+        self.bg_color = bg_color
         self.service = build('slides', 'v1', 
                              credentials=self.credentials, 
                              cache_discovery=False)
@@ -81,7 +82,8 @@ Please remove it or use --force option to overwrite it.
         if not os.path.isfile(video_file) or self.force:
             concat_clip = concatenate_videoclips(self.clip_list, 
                                                  method="compose",
-                                                 padding=self.duration)
+                                                 padding=self.duration,
+                                                 bg_color=self.bg_color)
             logging.info("Write video file: ") 
             concat_clip.write_videofile(video_file, fps=self.fps)
             
