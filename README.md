@@ -97,24 +97,9 @@ The `GS2Video` class is responsible for:
 
 - Initializing with credentials, output file, language, FPS, and other options.
 - Fetching the presentation content using Google Slides API.
-- Generating audio for each slide using gTTS and Kokoro TTS.
+- Generating audio for each slide using Kokoro TTS.
 - Creating video clips for each slide and concatenating them with transitions.
 - Saving the final video to the specified output file.
-
-#### Methods
-
-- `__init__(self, credentials, output, language='en', fps=24, keep=False, force=False, duration=1, bg_color=(0, 0, 0))`: Initializes the `GS2Video` object.
-- `check_output(self)`: Checks if the output file already exists and exits if it does, unless the `force` option is set.
-- `prep_cache_dir(self)`: Prepares the cache directory based on the output file name.
-- `generate_hash(self, content)`: Generates an MD5 hash for the given content.
-- `rmtem(self)`: Removes temporary files.
-- `to_video(self, presentation_id)`: Converts the Google Slides presentation to a video.
-- `process_slide(self, slide, video_hash, index, presentation_id)`: Processes each slide to generate audio and image clips.
-- `process_audio(self, text, text_hash, index)`: Generates audio for the given text using gTTS.
-- `process_image(self, slide, video_hash, index, presentation_id)`: Downloads the slide image and saves it to the cache.
-- `process_audio_kokoro(self, text, text_hash, index)`: Generates audio for the given text using Kokoro TTS.
-- `extract_terms_and_ipa(self, presentation_id)`: Extracts terms and their IPA pronunciations from the slide notes.
-- `replace_terms_with_ipa(self, text, terms_ipa)`: Replaces terms in the text with their IPA pronunciations.
 
 ## License
 
