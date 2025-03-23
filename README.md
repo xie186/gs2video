@@ -127,7 +127,6 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 ## Acknowledgements
 
 - [Google Slides API](https://developers.google.com/slides)
-- [gTTS (Google Text-to-Speech)](https://pypi.org/project/gTTS/)
 - [Kokoro TTS](https://github.com/yourusername/kokoro-tts)
 - [MoviePy](https://zulko.github.io/moviepy/)
 - [Misaki G2P](https://github.com/yourusername/misaki-g2p)
