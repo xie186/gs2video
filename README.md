@@ -31,14 +31,14 @@ Like what I do, Please consider supporting me.
 
 3. Install the required dependencies:
     ```bash
-    pip install -r requirements.txt
+    pip install -r .devcontainer/requirements.txt
     ```
 
 4. Set up Google API credentials:
     - Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
     - Enable the Google Slides API for your project.
     - Create OAuth 2.0 credentials and download the JSON file.
-    - Save the JSON file as `gs2slide-1eb92b075bce.json` in the project directory.
+    - Save the JSON file as `gs2slide-credential.json` in the project directory.
 
 ## Usage
 
