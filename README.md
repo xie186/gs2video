@@ -1,11 +1,11 @@
 # GS2Video
 
-GS2Video is a Python tool that converts Google Slides presentations into videos. It uses Google Slides API to fetch the presentation content, generates audio using Google Text-to-Speech (gTTS) and Kokoro TTS, and creates a video with transitions between slides.
+GS2Video is a Python tool that converts Google Slides presentations into videos. It uses Google Slides API to fetch the presentation content, generates audio using Kokoro TTS, and creates a video with transitions between slides.
 
 ## Features
 
 - Convert Google Slides presentations to videos
-- Generate audio using Google Text-to-Speech (gTTS) and Kokoro TTS
+- Generate audio using Kokoro TTS
 - Add custom background color and duration for slide transitions
 - Keep or remove intermediate files (mp3 and png files)
 - Force overwrite existing output video files
